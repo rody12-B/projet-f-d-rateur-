@@ -1,0 +1,9 @@
+asgiref  #asgiref est une bibliothèque qui fournit des utilitaires pour l'ASGI (Asynchronous Server Gateway Interface).
+Django  
+django-bootstrap-modal-forms  #permet d'intégrer facilement des formulaires Bootstrap dans des modaux.
+django-bootstrap3  # permet de styliser les formulaires Django avec Bootstrap
+django-forms-bootstrap
+django-widget-tweaks  #Un package qui permet de modifier les attributs des widgets de formulaire dans les templates Django.
+Pillow   #Pillow est une bibliothèque de traitement d'images Python.
+pytz   #pytz est une bibliothèque pour la gestion des fuseaux horaires.
+sqlparse  #sqlparse est une bibliothèque pour analyser et formater des requêtes SQL.
