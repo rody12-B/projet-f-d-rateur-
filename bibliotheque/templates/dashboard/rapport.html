@@ -1,0 +1,112 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row" style="padding-top: 30px">
+        <div class="col-sm-1"></div>
+        
+        <div class="col-sm-10">
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    <i class="fas fa-table"> RAPPORT SUR LES EMPRUNTS </i>
+                    {{ rapport.get_type_rapport_display|upper }}
+                    <a href="?export=pdf" class="btn btn-sm btn-success" style="float: right;">
+                        <i class="fas fa-file-pdf"></i> Exporter PDF
+                    </a>
+                </div>
+                
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        Rapport généré le : {{ rapport.date_generation|date:"d/m/Y H:i" }}
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                            {% if rapport.type_rapport == 'popularite' %}
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Livre</th>
+                                        <th>Genre</th>
+                                        <th>Nombre d'emprunts</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in data %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td><strong>{{ item.livre__title }}</strong></td>
+                                        <td><strong>{{ item.livre__genre }}</strong></td>
+                                        <td class="text-center">
+                                            <span class="badge badge-pill badge-primary" style="font-size: 1em;">
+                                                {{ item.total }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            
+                            {% elif rapport.type_rapport == 'retards' %}
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Utilisateur</th>
+                                        <th>Retards</th>
+                                       
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in data %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>
+                                            <i class="fas fa-user"></i> {{ item.lecteur__username }}
+                                        </td>
+                                        <td class="text-center">
+                                            <span class="badge badge-pill badge-danger" style="font-size: 1em;">
+                                                {{ item.retards }}
+                                            </span>
+                                        </td>
+                                        
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            {% endif %}
+                        </table>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <div class="alert alert-secondary">
+                            <i class="fas fa-info-circle"></i> 
+                            {% if rapport.type_rapport == 'popularite' %}
+                                Top 10 des livres les plus empruntés
+                            {% else %}
+                                Liste des utilisateurs avec des retards
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-sm-1"></div>
+    </div>
+</div>
+
+<!-- Scripts pour DataTables -->
+<script type="text/javascript" src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script>
+$(document).ready(function() {
+    $('#dataTable').DataTable({
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.11.3/i18n/fr_fr.json"
+        },
+        "columnDefs": [
+            { "orderable": false, "targets": [3] } // Désactiver le tri sur la colonne Actions
+        ]
+    });
+});
+</script>
+{% endblock %}

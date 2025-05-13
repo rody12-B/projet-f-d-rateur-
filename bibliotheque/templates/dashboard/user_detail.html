@@ -1,0 +1,52 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container-fluid">
+        <div class="row">
+          <div class="col-12 mb-3">
+          <div class="col-12 mb-3">
+              <div id="content-wrapper">
+        <div class="container-fluid">
+           
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fas fa-table text-warning"></i>
+                    Details de l'Utilisateur  <strong>  {{ object.username }} </strong>
+                </div>
+                <div class="card-body">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+
+ <div class="row">
+        <div class="col-12">
+            <ul class="list-group">
+              <li class="list-group-item"><strong>Nom :</strong> {{ object.username }}</li>
+              <li class="list-group-item"><strong>Email :</strong> {{ object.email }}</li>
+              <li class="list-group-item"><strong>Rôle :</strong>
+                {% if object.is_admin %}
+                    Administrateur
+                {% elif object.is_publisher %}
+                    Utilisateur
+                {% else %}
+                    Aucun rôle assigné
+                {% endif %}
+            </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row top-buffer" style="padding-top: 10px">
+        <div class="col-12">
+                <a href="{% url 'aluser' %}"><button type="button" class="btn btn-success">Retour</button></a>
+        </div>
+    </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}

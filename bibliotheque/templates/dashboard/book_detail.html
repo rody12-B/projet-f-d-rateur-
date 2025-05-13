@@ -1,0 +1,48 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container-fluid">
+        <div class="row">
+          <div class="col-12 mb-3">
+          <div class="col-12 mb-3">
+              <div id="content-wrapper">
+        <div class="container-fluid">
+           
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fas fa-table text-warning"></i>
+                    Details du l'oeuvre
+                </div>
+                <div class="card-body">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+
+ <div class="row">
+        <div class="col-12">
+            <ul class="list-group">
+              <li class="list-group-item"> <img src="{{ book.cover.url }}" style="height: 100px; width: 100px"></li>
+              <li class="list-group-item"><strong>Titre du livre:</strong> {{ object.title }}</li>
+              <li class="list-group-item"><strong>Auteur :</strong> {{ object.author }}</li>
+              <li class="list-group-item"><strong>Genre :</strong> {{ object.genre }}</li>
+              <li class="list-group-item"><strong>Description:</strong> {{ object.desc }}</li>
+              <li class="list-group-item"><strong>Chargé par  :</strong> {{ object.uploaded_by }}</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row top-buffer" style="padding-top: 10px">
+        <div class="col-12">
+                <a href="{% url 'ambook' %}"><button type="button" class="btn btn-success">Retour</button></a>
+        </div>
+    </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}

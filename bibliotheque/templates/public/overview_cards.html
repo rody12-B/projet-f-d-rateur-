@@ -1,0 +1,39 @@
+<!-- Aperçu rapide des emprunts -->
+<div class="col-md-4">
+    <div class="card text-white bg-primary mb-4 shadow">
+        <div class="card-body">
+            <div class="card-title"><i class="fas fa-clock"></i> Emprunts en attente</div>
+            <h3>{{ emprunts_pending|length }}</h3>
+        </div>
+        <div class="card-footer d-flex align-items-center justify-content-between">
+            <a class="text-white stretched-link" href="{% url 'historique' %}">Voir les demandes</a>
+            <div class="text-white"><i class="fas fa-angle-right"></i></div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-4">
+    <div class="card text-white bg-success mb-4 shadow">
+        <div class="card-body">
+            <div class="card-title"><i class="fas fa-book-open"></i> Emprunts actifs</div>
+            <h3>{{ emprunts_confirmed|length }}</h3>
+        </div>
+        <div class="card-footer d-flex align-items-center justify-content-between">
+            <a class="text-white stretched-link" href="{% url 'historique' %}">Gérer mes emprunts</a>
+            <div class="text-white"><i class="fas fa-angle-right"></i></div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-4">
+    <div class="card text-white bg-secondary mb-4 shadow">
+        <div class="card-body">
+            <div class="card-title"><i class="fas fa-history"></i> Historique</div>
+            <h3>{{ emprunts_ended|length }}</h3>
+        </div>
+        <div class="card-footer d-flex align-items-center justify-content-between">
+            <a class="text-white stretched-link" href="{% url 'historique' %}">Voir l'historique</a>
+            <div class="text-white"><i class="fas fa-angle-right"></i></div>
+        </div>
+    </div>
+</div>

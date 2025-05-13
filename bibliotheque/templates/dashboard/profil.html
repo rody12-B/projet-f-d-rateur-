@@ -1,0 +1,68 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-3" style="color: red">
+            <p style="color: blue"></p>  
+        </div>
+
+        <div class="col-sm-6" style="padding-top: 87px">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <i class="fas fa-table text-primary"></i>
+                    Gérer mon profil
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                    {% endif %}
+                    <form action="{% url 'update_profile' %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <div class="col">
+                                <input type="text" class="form-control" name="name" placeholder="Nom" value="{{ user.username }}" required="required">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col">
+                                <input type="email" class="form-control" name="email" placeholder="Email" value="{{ user.email }}" required="required">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col">
+                                <input type="password" class="form-control" name="old_password" placeholder="Ancien mot de passe" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col">
+                                <input type="password" class="form-control" name="new_password" placeholder="Nouveau mot de passe ">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col">
+                                <button type="submit" class="btn btn-primary btn-lg btn-block">Mettre à jour</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>  
+    </div>
+
+    <div class="col-sm-3" style="color: red">
+    </div>
+</div>
+
+<script type="text/javascript" src="{% static 'js/jquery-2.1.3.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
+{% endblock %}

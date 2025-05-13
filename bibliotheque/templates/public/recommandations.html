@@ -1,0 +1,48 @@
+{% extends 'public/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row" style="padding-top: 87px">
+        <div class="col-sm-1"></div>
+
+        <div class="col-sm-10">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <i class="fas fa-book mr-2"></i>
+                    Livres recommandés pour vous
+                </div>
+                
+                <div class="card-body">
+                    {% if recommandations %}
+                        <ul class="list-group">
+                            {% for livre in recommandations %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <img src="{{ livre.cover.url }}" alt="{{ livre.title }}" 
+                                        class="img-thumbnail" style="max-height: 100px;"> 
+                                    <strong>{{ livre.title }}</strong> - {{ livre.author }}
+                                    <strong>{{ livre.genre }}</strong> - {{ livre.genre }}
+                                </div>
+                                <a href="{% url 'udvbook' livre.pk %}" class="btn btn-info btn-sm">
+                                    <i class="fas fa-eye"></i> Voir Détails
+                                </a>
+                            </li>
+                        {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="alert alert-warning" role="alert">
+                            Aucune recommandation pour l’instant.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-1"></div>
+    </div>
+</div>
+
+<script type="text/javascript" src="{% static 'js/jquery-2.1.3.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+{% endblock %}

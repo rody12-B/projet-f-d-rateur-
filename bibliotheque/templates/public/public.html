@@ -1,0 +1,259 @@
+{% extends 'public/base.html' %}
+{% load static %}
+
+
+{% block body %}
+<div class="container-fluid" style="padding-top: 87px">
+
+    <!-- SECTION 1 : Message de bienvenue -->
+    <section class="jumbotron bg-light shadow p-5 rounded-4 text-center animate__animated animate__fadeIn">
+        <h1 class="display-4 fw-bold text-primary mb-3">
+            <i class="fas fa-book-reader me-2"></i> Bienvenue sur <span class="text-dark">Biblio-PI</span>
+        </h1>
+    
+        <p class="lead text-secondary mb-4">
+            📚 Votre passerelle vers une bibliothèque intelligente, moderne et toujours à portée de main.
+        </p>
+    
+        <hr class="my-4 mx-auto" style="width: 60px; border-top: 3px solid #0d6efd;">
+    
+        <p class="text-muted mb-4">
+            🔍 Recherchez des milliers de livres en quelques clics.  
+            🤖 Discutez avec notre chatbot pour des recommandations personnalisées.  
+            📖 Suivez vos emprunts et découvrez vos prochaines lectures préférées.
+        </p>
+    
+        <a class="btn btn-lg btn-primary px-4 py-2 shadow-sm transition" href="{% url 'livres' %}" role="button">
+            <i class="fas fa-compass me-2"></i> Explorer la bibliothèque
+        </a>
+                   
+    </section>
+    
+    
+
+    <!-- SECTION 2 : Aperçu rapide des emprunts -->
+    <section class="row">
+        {% include "public/overview_cards.html" %}
+    </section>
+
+    <!-- SECTION 3 : Nouveau carrousel avec images statiques -->
+    <section class="mt-5 mb-5">
+        
+        <section class="mt-5 mb-5">
+            <div id="staticCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner rounded shadow">
+        
+                    <!-- Slide 1 -->
+                    <div class="carousel-item active">
+                        <div class="carousel-slide-container">
+                            <img src="{% static 'images/ca1.jpg' %}" class="d-block w-100" alt="Livre 1">
+                            <div class="carousel-hover-description">
+                                <h5>Les Portes du Temps</h5>
+                                <p>Un voyage captivant entre passé et futur où chaque choix compte.</p>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Slide 2 -->
+                    <div class="carousel-item">
+                        <div class="carousel-slide-container">
+                            <img src="{% static 'images/ca2.jpg' %}" class="d-block w-100" alt="Livre 2">
+                            <div class="carousel-hover-description">
+                                <h5>Ombres et Lumière</h5>
+                                <p>Une histoire touchante qui explore les dualités de l’âme humaine.</p>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <!-- Slide 3 -->
+                    <div class="carousel-item">
+                        <div class="carousel-slide-container">
+                            <img src="{% static 'images/ca10.jpg' %}" class="d-block w-100" alt="Livre 3">
+                            <div class="carousel-hover-description">
+                                <h5>Le Secret de la Bibliothèque</h5>
+                                <p>Suspense et mystère au cœur d’une bibliothèque millénaire.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="carousel-slide-container">
+                            <img src="{% static 'images/ca3.jpg' %}" class="d-block w-100" alt="Livre 3">
+                            <div class="carousel-hover-description">
+                                <h5>Un aller sans retour</h5>
+                                <p>Une séparation dévastatrice.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="carousel-slide-container">
+                            <img src="{% static 'images/ca4.jpg' %}" class="d-block w-100" alt="Livre 3">
+                            <div class="carousel-hover-description">
+                                <h5>Le monde des réseaux</h5>
+                                <p>Fondements sur les architectures réseaux.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="carousel-slide-container">
+                            <img src="{% static 'images/ca5.jpg' %}" class="d-block w-100" alt="Livre 3">
+                            <div class="carousel-hover-description">
+                                <h5>Le guide complet en C</h5>
+                                <p>De débutant à expert en langage C.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="carousel-slide-container">
+                            <img src="{% static 'images/ca6.jpg' %}" class="d-block w-100" alt="Livre 3">
+                            <div class="carousel-hover-description">
+                                <h5>Le guide complet en C#</h5>
+                                <p>Découvrez l'univers du langage C#.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="carousel-slide-container">
+                            <img src="{% static 'images/ca7.jpg' %}" class="d-block w-100" alt="Livre 3">
+                            <div class="carousel-hover-description">
+                                <h5>De zero a expert en python</h5>
+                                <p>Tout en un pour les nuls en python</p>
+                            </div>
+                        </div>
+                    </div>
+        
+                </div>
+        
+                <!-- Contrôles -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#staticCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Précédent</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#staticCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Suivant</span>
+                </button>
+            </div>
+            <style>
+                .carousel-slide-container {
+                    position: relative;
+                    height: 350px;
+                    background-color: #f8f9fa;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    overflow: hidden;
+                    border-radius: 8px;
+                }
+                
+                .carousel-slide-container img {
+                    max-height: 100%;
+                    object-fit: contain;
+                    transition: transform 0.4s ease;
+                }
+                
+                .carousel-slide-container:hover img {
+                    transform: scale(1.05);
+                }
+                
+                .carousel-hover-description {
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    padding: 15px;
+                    background: linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.8) 90%);
+                    color: #ffffff;
+                    text-align: center;
+                    opacity: 0;
+                    transform: translateY(100%);
+                    transition: all 0.5s ease;
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                }
+                
+                .carousel-hover-description h5 {
+                    margin-bottom: 5px;
+                    font-size: 1.25rem;
+                    font-weight: 600;
+                }
+                
+                .carousel-hover-description p {
+                    font-size: 0.95rem;
+                    font-weight: 300;
+                    margin: 0;
+                }
+                
+                .carousel-slide-container:hover .carousel-hover-description {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+                
+            </style> 
+        </section>
+        
+        
+
+    <!-- SECTION 4 : Recommandations personnalisées -->
+    <section  class="mt-5 mb-5">
+                <!-- FOOTER ÉLÉGANT -->
+    <footer class="bg-dark text-white pt-5 pb-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <!-- Colonne 1 : A propos -->
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-primary mb-3"><i class="fas fa-info-circle"></i> À propos de Biblio-PI</h5>
+                    <p class="text-muted">
+                        Biblio-PI est une plateforme innovante de gestion de bibliothèque, 
+                        offrant une expérience utilisateur exceptionnelle pour la découverte 
+                        et l'emprunt de livres.
+                    </p>
+                    
+                </div>
+
+                <!-- Colonne 2 : Liens rapides -->
+                <div class="col-md-2 mb-4">
+                    <h5 class="text-primary mb-3"><i class="fas fa-link"></i> Liens rapides</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="{% url 'livres' %}" class="text-muted">Catalogue</a></li>
+                        <li class="mb-2"><a href="{% url 'historique' %}" class="text-muted">Mes emprunts</a></li>
+                        <li class="mb-2"><a href="{% url 'recommandations' %}" class="text-muted">Nouveautés</a></li>
+                        <li class="mb-2"><a href="{% url 'ulchat' %}" class="text-muted">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Colonne 3 : Contact -->
+                <div class="col-md-3 mb-4">
+                    <h5 class="text-primary mb-3"><i class="fas fa-envelope"></i> Contactez-nous</h5>
+                    <ul class="list-unstyled text-muted">
+                        <li class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> 123 Rue Lac 1, Tunis</li>
+                        <li class="mb-2"><i class="fas fa-phone me-2"></i> +216 54141315</li>
+                        <li class="mb-2"><i class="fas fa-envelope me-2"></i> contact@biblio-pi.n</li>
+                    </ul>
+                </div>
+
+                <!-- Colonne 4 : Newsletter -->
+                <div class="col-md-3 mb-4">
+                    <h5 class="text-primary mb-3"><i class="fas fa-newspaper"></i> Newsletter</h5>
+                    <p class="text-muted">Abonnez-vous pour recevoir nos dernières nouveautés et offres spéciales.</p>
+                    <div class="social-icons mt-3">
+                        <a href="facebook.com" class="text-white me-2"><i class="fab fa-facebook-f fa-lg"></i></a>
+                        <a href="twitter.com" class="text-white me-2"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="instagram.com" class="text-white me-2"><i class="fab fa-instagram fa-lg"></i></a>
+                        <a href="linkedin.com" class="text-white"><i class="fab fa-linkedin-in fa-lg"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-4 bg-secondary">
+
+            <!-- Copyright et mentions légales -->
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="text-muted mb-0">&copy; 2025 Biblio-PI. Tous droits réservés.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    </section>
+
+</div>
+{% endblock %}

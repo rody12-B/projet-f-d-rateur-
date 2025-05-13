@@ -1,0 +1,252 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row" style="padding-top: 30px">
+        <div class="col-sm-1"></div>
+
+        <div class="col-sm-10">
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    <i class="fas fa-exchange-alt"></i>
+                    GESTION DES EMPRUNTS
+                    <a href="{% url 'emprunts_utilisateurs' %}?export=pdf" class="btn btn-sm btn-success" style="float: right;">
+                        
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-triangle{% endif %}"></i>
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                            <thead class="thead-light">
+                                <tr>
+                                    
+                                    <th>Utilisateur</th>
+                                    <th>Livre</th>
+                                    <th>Couverture</th>
+                                    <th>Genre</th>
+                                    <th>Dates</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for emprunt in emprunts %}
+                                <tr>
+                                    
+                                    <td>
+                                        <strong>{{ emprunt.lecteur.username }}</strong>
+                                        
+                                    </td>
+                                    <td>{{ emprunt.livre.title }}</td>
+                                    <td class="text-center">
+                                        {% if emprunt.livre.cover %}
+                                            <img src="{{ emprunt.livre.cover.url }}" alt="{{ emprunt.livre.title }}" 
+                                                 class="img-thumbnail" style="max-height: 80px;">
+                                        {% else %}
+                                            <span class="text-muted"><i class="fas fa-book fa-2x"></i></span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ emprunt.livre.genre }}</td>
+                                    <td>
+                                        <div class="d-flex flex-column">
+                                            <span class="badge badge-light mb-1">
+                                                <i class="fas fa-calendar-plus"></i> {{ emprunt.date_emprunt|date:"d/m/Y" }}
+                                            </span>
+                                            <span class="badge {% if emprunt.est_en_retard %}badge-danger{% else %}badge-light{% endif %}">
+                                                <i class="fas fa-calendar-times"></i> {{ emprunt.date_limite|date:"d/m/Y" }}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="align-middle">
+                                        {% if emprunt.rendu %}
+                                            <span class="badge badge-success p-2">
+                                                <i class="fas fa-check-circle"></i> Retourné
+                                            </span>
+                                        {% elif emprunt.annule %}
+                                            <span class="badge badge-secondary p-2">
+                                                <i class="fas fa-ban"></i> Annulé
+                                            </span>
+                                        {% elif emprunt.confirme %}
+                                            <span class="badge badge-primary p-2">
+                                                <i class="fas fa-check"></i> Confirmé
+                                            </span>
+                                            {% if emprunt.est_en_retard %}
+                                                <div class="mt-1 text-danger small">
+                                                    <i class="fas fa-exclamation-triangle"></i> Retard: {{ emprunt.penalite }} dinars
+                                                </div>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="badge badge-warning p-2">
+                                                <i class="fas fa-clock"></i> En attente
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="btn-group-vertical btn-group-sm" role="group">
+                                            {% if not emprunt.confirme and not emprunt.rendu and not emprunt.annule %}
+                                                <a href="{% url 'confirmer_emprunt' emprunt.id %}" 
+                                                   class="btn btn-success btn-action"
+                                                   title="Confirmer cet emprunt">
+                                                    <i class="fas fa-check"></i> Confirmer
+                                                </a>
+                                                <a href="{% url 'annuler_emprunt' emprunt.id %}" 
+                                                   class="btn btn-danger btn-action"
+                                                   title="Annuler cet emprunt">
+                                                    <i class="fas fa-times"></i> Annuler
+                                                </a>
+                                            {% elif emprunt.confirme and not emprunt.rendu %}
+                                                <button class="btn btn-info" disabled>
+                                                    <i class="fas fa-check-circle"></i> Confirmé
+                                                </button>
+                                                {% if emprunt.est_en_retard %}
+                                                    <a href="#" class="btn btn-warning btn-sm mt-1">
+                                                        <i class="fas fa-envelope"></i> Notifier
+                                                    </a>
+                                                {% endif %}
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="7" class="text-center">
+                                        <div class="alert alert-info">
+                                            <i class="fas fa-info-circle"></i> Aucun emprunt à afficher
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% if is_paginated %}
+                    <nav aria-label="Navigation des emprunts">
+                        <ul class="pagination justify-content-center mt-3">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                        <i class="fas fa-angle-left"></i> Précédent
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for i in paginator.page_range %}
+                                {% if page_obj.number == i %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ i }}</span>
+                                    </li>
+                                {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                        Suivant <i class="fas fa-angle-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-sm-1"></div>
+    </div>
+</div>
+
+<!-- Modal de confirmation -->
+<div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-{% if '/annuler/' in request.path %}danger{% else %}success{% endif %} text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-exclamation-triangle"></i> Confirmation requise
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir effectuer cette action ?</p>
+                <div class="alert alert-warning">
+                    <i class="fas fa-info-circle"></i> Cette action est irréversible.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fas fa-times"></i> Annuler
+                </button>
+                <a id="confirmAction" href="#" class="btn btn-{% if '/annuler/' in request.path %}danger{% else %}success{% endif %}">
+                    <i class="fas fa-check"></i> Confirmer
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extrascripts %}
+<script>
+    $(document).ready(function() {
+        // Initialisation DataTable
+        if ($.fn.DataTable.isDataTable('#dataTable')) {
+            $('#dataTable').DataTable().destroy();
+        }
+        
+        $('#dataTable').DataTable({
+            responsive: true,
+            language: {
+                url: "{% static 'js/French.json' %}"
+            },
+            columnDefs: [
+                { responsivePriority: 1, targets: 1 },
+                { responsivePriority: 2, targets: 3 },
+                { orderable: false, targets: [0,1, 2, 3, 4, 5] }
+            ]
+        });
+
+        // Gestion des messages
+        setTimeout(function() {
+            $('.alert').fadeTo(500, 0).slideUp(500);
+        }, 3000);
+
+        // Gestion des modals de confirmation
+        $('a.btn-action').on('click', function(e) {
+            e.preventDefault();
+            var url = $(this).attr('href');
+            var isAnnulation = url.includes('annuler');
+            
+            // Mise à jour de la modal selon l'action
+            $('#confirmationModal .modal-header')
+                .removeClass('bg-danger bg-success')
+                .addClass(isAnnulation ? 'bg-danger' : 'bg-success');
+                
+            $('#confirmAction')
+                .removeClass('btn-danger btn-success')
+                .addClass(isAnnulation ? 'btn-danger' : 'btn-success')
+                .attr('href', url);
+                
+            $('#confirmationModal').modal('show');
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,160 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row" style="padding-top: 30px">
+        <div class="col-sm-1"></div>
+
+        <div class="col-sm-10">
+            <div class="card mb-3">
+                <div class="card-header bg-primary text-white">
+                    <i class="fas fa-book-medical"></i>
+                    NOUVEAUX LIVRES AJOUTÉS
+                </div>
+                <div class="card-body">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-triangle{% endif %}"></i>
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="text-center">Couverture</th>
+                                    <th class="text-center">Titre</th>
+                                    <th class="text-center">Statut</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if books %}
+                                    {% for book in books %}
+                                    <tr>
+                                        
+                                        <td class="text-center">
+                                            {% if book.cover %}
+                                                <img src="{{ book.cover.url }}" alt="{{ book.title }}" 
+                                                     class="img-thumbnail" style="max-height: 100px;">
+                                            {% else %}
+                                                <span class="text-muted"><i class="fas fa-book fa-2x"></i></span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ book.title }}</td>
+                                        <td class="text-center">
+                                            {% if book.pdf %}
+                                                <span class="badge badge-success">
+                                                    <i class="fas fa-file-pdf"></i> Disponible
+                                                </span>
+                                            {% else %}
+                                                <span class="badge badge-secondary">
+                                                    <i class="fas fa-times-circle"></i> Indisponible
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                {% if book.pdf %}
+                                                    <a href="{{ book.pdf.url }}" 
+                                                       class="btn btn-primary"
+                                                       target="_blank"
+                                                       title="Consulter le PDF">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a href="{{ book.pdf.url }}" 
+                                                       download
+                                                       class="btn btn-success"
+                                                       title="Télécharger le PDF">
+                                                        <i class="fas fa-download"></i>
+                                                    </a>
+                                                {% else %}
+                                                    <button class="btn btn-secondary" disabled>
+                                                        <i class="fas fa-eye-slash"></i>
+                                                    </button>
+                                                    <button class="btn btn-secondary" disabled>
+                                                        <i class="fas fa-download"></i>
+                                                    </button>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="5" class="text-center">
+                                            <div class="alert alert-info">
+                                                <i class="fas fa-info-circle"></i> Aucun nouveau livre à afficher
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {% if is_paginated %}
+                    <nav aria-label="Navigation des livres">
+                        <ul class="pagination justify-content-center mt-3">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                        <i class="fas fa-angle-left"></i> Précédent
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for i in paginator.page_range %}
+                                {% if page_obj.number == i %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ i }}</span>
+                                    </li>
+                                {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                        Suivant <i class="fas fa-angle-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-sm-1"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrascripts %}
+<script>
+    $(document).ready(function() {
+        $('#dataTable').DataTable({
+            responsive: true,
+            language: {
+                url: "{% static 'js/French.json' %}"
+            },
+            columnDefs: [
+                { responsivePriority: 1, targets: 1 }, // Titre
+                { responsivePriority: 2, targets: 3 }, // Actions
+                { orderable: false, targets: [0, 2, 3] }  // Couverture, Disponibilité et Actions non triables
+            ]
+        });
+    });
+    
+</script>
+{% endblock %}

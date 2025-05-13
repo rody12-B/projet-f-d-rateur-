@@ -1,0 +1,183 @@
+{% extends 'public/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row" style="padding-top: 87px">
+        <div class="col-sm-1"></div>
+
+        <div class="col-sm-10">
+            <!-- Section Emprunts en attente -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-warning text-white">
+                    <i class="fas fa-clock mr-2"></i>
+                    MES DEMANDES EN ATTENTE
+                </div>
+                <div class="card-body">
+                    {% if emprunts_pending %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Couverture</th>
+                                        <th>Titre</th>
+                                        <th>Genre</th>
+                                        <th>Date demande</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for emp in emprunts_pending %}
+                                        <tr>
+                                            <td>
+                                                {% if emp.livre.cover %}
+                                                    <img src="{{ emp.livre.cover.url }}" class="img-thumbnail" style="max-height: 100px;">
+                                                {% else %}
+                                                    <i class="fas fa-book fa-3x text-muted"></i>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ emp.livre.title }}</td>
+                                            <td>{{ emp.livre.genre }}</td>
+                                            <td>{{ emp.date_emprunt|date:"d/m/Y" }}</td>
+                                            <td>
+                                                <a href="{% url 'annuler_emprunt' emp.id %}" 
+                                                   class="btn btn-sm btn-danger"
+                                                   onclick="return confirm('Annuler cette demande?')">
+                                                   <i class="fas fa-times"></i> Annuler
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">Aucune demande en attente</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Section Emprunts actifs -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <i class="fas fa-book-open mr-2"></i>
+                    MES EMPRUNTS ACTIFS
+                </div>
+                <div class="card-body">
+                    {% if emprunts_confirmed %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Couverture</th>
+                                        <th>Titre</th>
+                                        <th>Genre</th>
+                                        <th>Date emprunt</th>
+                                        <th>Date retour</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for emp in emprunts_confirmed %}
+                                        <tr>
+                                            <td>
+                                                {% if emp.livre.cover %}
+                                                    <img src="{{ emp.livre.cover.url }}" class="img-thumbnail" style="max-height: 100px;">
+                                                {% else %}
+                                                    <i class="fas fa-book fa-3x text-muted"></i>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ emp.livre.title }}</td>
+                                            <td>{{ emp.livre.genre }}</td>
+                                            <td>{{ emp.date_emprunt|date:"d/m/Y" }}</td>
+                                            <td>{{ emp.date_limite|date:"d/m/Y" }}</td>
+                                            <td>
+                                                {% if emp.livre.pdf and emp.confirme %}
+                                                    <a href="{{ emp.livre.pdf.url }}" 
+                                                       class="btn btn-sm btn-primary"
+                                                       target="_blank">
+                                                       <i class="fas fa-eye"></i> Consulter
+                                                    </a>
+                                                {% elif emp.livre.pdf %}
+                                                    <button class="btn btn-sm btn-secondary" disabled title="Le PDF sera disponible après confirmation de l'emprunt">
+                                                        <i class="fas fa-eye"></i> Consulter
+                                                    </button>
+                                                {% endif %}
+                                                <a href="{% url 'retourner_livre' emp.id %}" 
+                                                   class="btn btn-sm btn-success"
+                                                   onclick="return confirm('Retourner ce livre?')">
+                                                   <i class="fas fa-undo"></i> Retourner
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">Aucun emprunt actif</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Section Historique -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-secondary text-white">
+                    <i class="fas fa-history mr-2"></i>
+                    MON HISTORIQUE
+                </div>
+                <div class="card-body">
+                    {% if emprunts_ended %}
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Couverture</th>
+                                        <th>Titre</th>
+                                        <th>Genre</th>
+                                        <th>Statut</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for emp in emprunts_ended %}
+                                        <tr>
+                                            <td>
+                                                {% if emp.livre.cover %}
+                                                    <img src="{{ emp.livre.cover.url }}" class="img-thumbnail" style="max-height: 100px;">
+                                                {% else %}
+                                                    <i class="fas fa-book fa-3x text-muted"></i>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ emp.livre.title }}</td>
+                                            <td>{{ emp.livre.genre }}</td>
+                                            <td>
+                                                {% if emp.rendu %}
+                                                    <span class="badge badge-success">Retourné</span>
+                                                {% elif emp.annule %}
+                                                    <span class="badge badge-danger">Annulé</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if emp.rendu %}
+                                                    {{ emp.date_retour|date:"d/m/Y" }}
+                                                {% else %}
+                                                    {{ emp.date_emprunt|date:"d/m/Y" }}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-muted">Aucun historique</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-1"></div>
+    </div>
+</div>
+{% endblock %}
